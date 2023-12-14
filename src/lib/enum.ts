@@ -15,3 +15,8 @@ export enum ImageSizeEnum {
   "4k" = "4k",
   "5k" = "5k",
 }
+
+export enum ImageTokenEnum {
+  DEBUG = "debug",
+  DOWNLOAD = "download",
+}

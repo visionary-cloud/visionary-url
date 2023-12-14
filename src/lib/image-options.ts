@@ -1,4 +1,4 @@
-import { ImageSizeEnum } from "../lib/enum";
+import { ImageSizeEnum, ImageTokenEnum } from "../lib/enum";
 import { isDebugToken, isDownloadToken, isImageSizeToken } from "../lib/token";
 import { ImageOptions } from "../types/visionary.types";
 
@@ -16,4 +16,18 @@ export const parseOptionTokens = (optionTokens: string[] = []): ImageOptions => 
     }
   }
   return returnOptions;
+};
+
+export const generateOptionsString = (options: ImageOptions): string | null => {
+  const tokenArr = [];
+  if (options.debug) {
+    tokenArr.push(ImageTokenEnum.DEBUG);
+  }
+  if (options.download) {
+    tokenArr.push(ImageTokenEnum.DOWNLOAD);
+  }
+  if (options.size && isImageSizeToken(options.size)) {
+    tokenArr.push(options.size);
+  }
+  return tokenArr.length ? tokenArr.sort().join(",") : null;
 };

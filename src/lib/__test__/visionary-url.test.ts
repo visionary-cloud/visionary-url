@@ -85,7 +85,7 @@ describe("visionary-url", () => {
    */
 
   describe(generateVisionaryUrl.name, () => {
-    test("can generate a Visionary URL", () => {
+    test("can generate a URL", () => {
       const url = generateVisionaryUrl(sampleFields);
 
       const expectedUrl =
@@ -105,14 +105,49 @@ describe("visionary-url", () => {
       expect(url).toBe(expectedUrl);
     });
 
+    test("can generate a URL with download specified", () => {
+      const url = generateVisionaryUrl(sampleFields, {
+        download: true,
+      });
+
+      const expectedUrl =
+        "https://cdn.visionary.cloud/image/dmI4N3MxITE2MDAhMTIwMCExMTAwNDQhTENESllOOUZ4R19NX04lTCVNJU00b35wdFJJQQ/download/image.jpg";
+
+      expect(url).toBe(expectedUrl);
+    });
+
+    test("can generate a URL with image options [A]", () => {
+      const url = generateVisionaryUrl(sampleFields, {
+        download: true,
+        size: ImageSizeEnum.xs,
+      });
+
+      const expectedUrl =
+        "https://cdn.visionary.cloud/image/dmI4N3MxITE2MDAhMTIwMCExMTAwNDQhTENESllOOUZ4R19NX04lTCVNJU00b35wdFJJQQ/download,xs/image.jpg";
+
+      expect(url).toBe(expectedUrl);
+    });
+
+    test("can generate a URL with image options [B]", () => {
+      const url = generateVisionaryUrl(sampleFields, {
+        download: true,
+        filename: "flowers.jpg",
+        size: ImageSizeEnum["4k"],
+      });
+
+      const expectedUrl =
+        "https://cdn.visionary.cloud/image/dmI4N3MxITE2MDAhMTIwMCExMTAwNDQhTENESllOOUZ4R19NX04lTCVNJU00b35wdFJJQQ/4k,download/flowers.jpg";
+
+      expect(url).toBe(expectedUrl);
+    });
+
     test("can generate a URL with a custom filename", () => {
       const url = generateVisionaryUrl(sampleFields, {
         filename: "strawberry-fields-vibrant-red.jpg",
       });
 
-      // TODO: expected URL should have different filename!!
       const expectedUrl =
-        "https://cdn.visionary.cloud/image/dmI4N3MxITE2MDAhMTIwMCExMTAwNDQhTENESllOOUZ4R19NX04lTCVNJU00b35wdFJJQQ/image.jpg";
+        "https://cdn.visionary.cloud/image/dmI4N3MxITE2MDAhMTIwMCExMTAwNDQhTENESllOOUZ4R19NX04lTCVNJU00b35wdFJJQQ/strawberry-fields-vibrant-red.jpg";
 
       expect(url).toBe(expectedUrl);
     });
@@ -153,6 +188,7 @@ describe("visionary-url", () => {
       const code = generateVisionaryCode(fields);
 
       const expectedCode = "ams5MiExMDAhMTAwIWJlM2UzZiFibHVyaGFzaHZhbGxsdWU";
+
       expect(code).toBe(expectedCode);
     });
 
@@ -169,6 +205,7 @@ describe("visionary-url", () => {
       const code = generateVisionaryCode(fields);
 
       const expectedCode = "ams5MyExMDAhMTAwIWJlM2UzZiFibHVyaGFzaHZhbGxsdWUhSGFwcHkgY293IG9uIGEgZmFybQ";
+
       expect(code).toBe(expectedCode);
     });
   });

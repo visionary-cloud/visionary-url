@@ -1,7 +1,7 @@
 import { decode as decodeBase64Url, encode as encodeBase64Url } from "universal-base64url";
 
 import { CDN_ENDPOINT, V_CODE_SEPARATOR } from "./constants";
-import { parseOptionTokens } from "./image-options";
+import { generateOptionsString, parseOptionTokens } from "./image-options";
 import { compact, isBase64UrlFormatted } from "./util";
 
 import {
@@ -93,13 +93,23 @@ export const generateVisionaryCode = (fields: VisionaryImageFields): string => {
 export const generateVisionaryUrl = (
   fields: VisionaryImageFields,
   options?: GenerateVisionaryUrlOptions
-) => {
+): string => {
   const code = generateVisionaryCode(fields);
   const endpoint = options?.endpoint ? new URL(options.endpoint) : new URL(CDN_ENDPOINT);
   if (!endpoint.origin) {
     throw new Error("Cannot construct Visionary URL: bad endpoint");
   }
-  return [endpoint.origin, "image", code, "image.jpg"].join("/");
+  const urlParts = [endpoint.origin, "image", code];
+  const optionsString = options ? generateOptionsString(options) : null;
+  if (optionsString) {
+    urlParts.push(optionsString);
+  }
+  if (options?.filename) {
+    urlParts.push(options.filename);
+  } else {
+    urlParts.push("image.jpg");
+  }
+  return urlParts.join("/");
 };
 
 export const parseVisionaryCode = (code: string): VisionaryImageFields | null => {
