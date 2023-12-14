@@ -21,6 +21,15 @@ describe(parseOptionsString.name, () => {
     expect(parsedOptions.size).toBe(ImageSizeEnum.xl);
   });
 
+  test("can parse an options string with download set", () => {
+    const optionsString = "4k,download";
+
+    const parsedOptions = parseOptionsString(optionsString);
+
+    expect(parsedOptions.download).toBe(true);
+    expect(parsedOptions.size).toBe(ImageSizeEnum["4k"]);
+  });
+
   test("can parse an empty options string", () => {
     const parsedOptionsEmpty = parseOptionsString("");
 
