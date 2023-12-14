@@ -2,15 +2,11 @@ import { describe, expect, test } from "vitest";
 
 import { VisionaryImageFields } from "../../types/visionary.types";
 import { ImageSizeEnum } from "../enum";
-import {
-  generateVisionaryCode,
-  generateVisionaryUrl,
-  parseVisionaryUrl,
-  parseVisionaryCode,
-} from "../visionary-url";
+import { generateVisionaryUrl, parseVisionaryUrl } from "../visionary-url";
 
 const sampleFields: VisionaryImageFields = {
   blurhash: "LCDJYN9FxG_M_N%L%M%M4o~ptRIA",
+  blurhashComponents: "4x4",
   bcc: "110044",
   fileId: "vb87s1",
   sourceHeight: 1200,
@@ -21,35 +17,6 @@ const sampleUrl =
   "https://cdn.visionary.cloud/image/dmI4N3MxITE2MDAhMTIwMCExMTAwNDQhTENESllOOUZ4R19NX04lTCVNJU00b35wdFJJQQ/strawberries.jpg";
 
 describe("visionary-url", () => {
-  /**
-   * parseVisionaryCode
-   */
-  describe(parseVisionaryCode.name, () => {
-    test("can parse a Visionary code with a URL as fileId", () => {
-      const code =
-        "aHR0cDovL2kuaW1hZ2VjZG40Mi5zcGFjZS9wdWJsaWMvaW1hZ2UtMTEuanBnITcwITY5IUJBQ0NBRSFMS05dUnYlMlR3PXddflJCVlpSaX07UlB4dXdI";
-
-      const fields = parseVisionaryCode(code);
-
-      expect(fields?.sourceWidth).toBe(70);
-      expect(fields?.bcc).toBe("BACCAE");
-      expect(fields?.fileId).toBe("http://i.imagecdn42.space/public/image-11.jpg");
-      expect(fields?.blurhash).toBe("LKN]Rv%2Tw=w]~RBVZRi};RPxuwH");
-    });
-
-    test("can ignore a bad code", () => {
-      const badCode = "nawwww~son";
-
-      const test = parseVisionaryCode(badCode);
-
-      expect(test).toBeNull();
-    });
-
-    test("can ignore an empty code", () => {
-      expect(parseVisionaryCode("")).toBeNull();
-    });
-  });
-
   /**
    * parseVisionaryUrl
    */
@@ -168,45 +135,6 @@ describe("visionary-url", () => {
 
       expect(testError1).toThrowError(/Invalid URL/);
       expect(testError2).toThrowError(/Invalid URL/);
-    });
-  });
-
-  /**
-   * generateVisionaryCode
-   */
-
-  describe(generateVisionaryCode.name, () => {
-    test("can generate a code", () => {
-      const fields: VisionaryImageFields = {
-        sourceHeight: 100,
-        sourceWidth: 100,
-        blurhash: "blurhashvalllue",
-        bcc: "be3e3f",
-        fileId: "jk92",
-      };
-
-      const code = generateVisionaryCode(fields);
-
-      const expectedCode = "ams5MiExMDAhMTAwIWJlM2UzZiFibHVyaGFzaHZhbGxsdWU";
-
-      expect(code).toBe(expectedCode);
-    });
-
-    test("can generate a code with alt text", () => {
-      const fields: VisionaryImageFields = {
-        altText: "Happy cow on a farm",
-        blurhash: "blurhashvalllue",
-        bcc: "be3e3f",
-        fileId: "jk93",
-        sourceHeight: 100,
-        sourceWidth: 100,
-      };
-
-      const code = generateVisionaryCode(fields);
-
-      const expectedCode = "ams5MyExMDAhMTAwIWJlM2UzZiFibHVyaGFzaHZhbGxsdWUhSGFwcHkgY293IG9uIGEgZmFybQ";
-
-      expect(code).toBe(expectedCode);
     });
   });
 });
