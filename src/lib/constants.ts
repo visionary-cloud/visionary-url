@@ -32,3 +32,13 @@ export const IMAGE_SIZES: Record<ImageSizeEnum, number> = {
   [ImageSizeEnum["4k"]]: 3840,
   [ImageSizeEnum["5k"]]: 5120,
 };
+
+export const IMAGE_SIZE_LOOKUP: Record<number, ImageSizeEnum> = Object.keys(IMAGE_SIZES).reduce(
+  (obj, key) => {
+    const keyEnum = key as ImageSizeEnum;
+    const numericalValue = IMAGE_SIZES[keyEnum];
+    obj[numericalValue] = keyEnum;
+    return obj;
+  },
+  {} as Record<number, ImageSizeEnum>
+);
