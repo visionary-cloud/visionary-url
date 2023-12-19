@@ -2,7 +2,12 @@ import { describe, expect, test } from "vitest";
 
 import { ImageFormatEnum } from "../enum";
 import { isImageSizeToken, tokenizeOptionsString } from "../token";
-import { compact, formatToContentType, isBase64UrlFormatted } from "../util";
+import {
+  compact,
+  suggestedBlurhashComponentDimensions,
+  formatToContentType,
+  isBase64UrlFormatted,
+} from "../util";
 
 describe("Visionary URL utils", () => {
   describe(isImageSizeToken.name, () => {
@@ -37,9 +42,7 @@ describe("Visionary URL utils", () => {
     test("returns true for valid base64url values", () => {
       expect(isBase64UrlFormatted("dmlzaW9uYXJ5")).toBe(true);
 
-      expect(
-        isBase64UrlFormatted("dGhpcyBpcyBhIHZhbGlkIGJhc2U2NHVybCB2YWx1ZSBzaXI")
-      ).toBe(true);
+      expect(isBase64UrlFormatted("dGhpcyBpcyBhIHZhbGlkIGJhc2U2NHVybCB2YWx1ZSBzaXI")).toBe(true);
     });
 
     test("returns false for invalid base64url values", () => {
@@ -64,8 +67,20 @@ describe("Visionary URL utils", () => {
 
       const compactedItems = compact(items);
 
-      expect(compactedItems.length).toBe(3);
       expect(compactedItems).toEqual(["image", "xyzzz", "image.jpg"]);
+    });
+  });
+
+  describe(suggestedBlurhashComponentDimensions.name, () => {
+    test("can compute x, y blurhash components from image dimensions", () => {
+      // square
+      expect(suggestedBlurhashComponentDimensions(400, 400)).toEqual([4, 4]);
+
+      // portrait
+      expect(suggestedBlurhashComponentDimensions(2400, 3200)).toEqual([4, 4]);
+
+      // landscape (AR > 2)
+      expect(suggestedBlurhashComponentDimensions(1280, 605)).toEqual([4, 3]);
     });
   });
 });
